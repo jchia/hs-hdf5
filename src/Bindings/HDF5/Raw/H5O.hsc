@@ -1,6 +1,22 @@
 #include <bindings.h>
 #include <H5Apublic.h>
 
+#ifndef HS_H5O_INFO1_T
+# if defined(H5O_info1_t)
+#  define HS_H5O_INFO1_T H5O_info1_t
+# else
+#  define HS_H5O_INFO1_T H5O_info_t
+# endif
+#endif
+
+#ifndef HS_H5O_INFO2_T
+# if defined(H5O_info2_t)
+#  define HS_H5O_INFO2_T H5O_info2_t
+# else
+#  define HS_H5O_INFO2_T H5O_info_t
+# endif
+#endif
+
 module Bindings.HDF5.Raw.H5O where
 
 import Data.Int
@@ -496,8 +512,8 @@ type H5O_mcdt_search_cb_t a = FunPtr (InOut a -> IO H5O_mcdt_search_ret_t)
 -- H5O_iterate_t
 
 #if defined(H5O_iterate_t_vers)
-type H5O_iterate1_t a = FunPtr (HId_t -> CString -> In H5O_info1_t -> InOut a -> IO HErr_t)
-type H5O_iterate2_t a = FunPtr (HId_t -> CString -> In H5O_info2_t -> InOut a -> IO HErr_t)
+type H5O_iterate1_t a = FunPtr (HId_t -> CString -> In HS_H5O_INFO1_T -> InOut a -> IO HErr_t)
+type H5O_iterate2_t a = FunPtr (HId_t -> CString -> In HS_H5O_INFO2_T -> InOut a -> IO HErr_t)
 # if H5O_iterate_t_vers == 1
 type H5O_iterate_t  a = FunPtr (HId_t -> CString -> In H5O_info_t ->  InOut a -> IO HErr_t)
 # elif H5O_iterate_t_vers == 2
@@ -513,8 +529,8 @@ type H5O_iterate1_t a = H5O_iterate_t a
 -- H5Oget_info
 
 #if defined(H5Oget_info_vers)
-# ccall H5Oget_info1, <hid_t> -> Out <H5O_info1_t> -> IO <herr_t>
-# ccall H5Oget_info2, <hid_t> -> Out <H5O_info1_t> -> CUInt -> IO <herr_t>
+# ccall H5Oget_info1, <hid_t> -> Out <HS_H5O_INFO1_T> -> IO <herr_t>
+# ccall H5Oget_info2, <hid_t> -> Out <HS_H5O_INFO1_T> -> CUInt -> IO <herr_t>
 # if H5Oget_info_vers == 1
 h5o_get_info :: HId_t -> Out H5O_info_t -> IO HErr_t
 h5o_get_info = h5o_get_info1
@@ -522,7 +538,7 @@ h5o_get_info = h5o_get_info1
 h5o_get_info :: HId_t -> Out H5O_info_t -> CUInt -> IO HErr_t
 h5o_get_info = h5o_get_info2
 # elif H5Oget_info_vers == 3
-#  ccall   H5Oget_info, <hid_t> -> Out <H5O_info2_t> -> CUInt -> IO <herr_t>
+#  ccall   H5Oget_info, <hid_t> -> Out <HS_H5O_INFO2_T> -> CUInt -> IO <herr_t>
 h5o_get_info :: HId_t -> Out H5O_info_t -> CUInt -> IO HErr_t
 h5o_get_info = h5o_get_info3
 # else
@@ -547,7 +563,7 @@ h5o_get_info_by_idx = h5o_get_info_by_idx1
 h5o_get_info_by_idx :: HId_t -> CString -> H5_index_t -> H5_iter_order_t -> HSize_t -> Out H5O_info_t -> CUInt ->HId_t -> IO HErr_t
 h5o_get_info_by_idx = h5o_get_info_by_idx2
 # elif H5Oget_info_by_idx_vers == 3
-#  ccall   H5Oget_info_by_idx3, <hid_t> -> CString -> <H5_index_t> -> <H5_iter_order_t> -> <hsize_t> -> Out <H5O_info2_t> -> CUInt -> <hid_t> -> IO <herr_t>
+#  ccall   H5Oget_info_by_idx3, <hid_t> -> CString -> <H5_index_t> -> <H5_iter_order_t> -> <hsize_t> -> Out <HS_H5O_INFO2_T> -> CUInt -> <hid_t> -> IO <herr_t>
 h5o_get_info_by_idx :: HId_t -> CString -> H5_index_t -> H5_iter_order_t -> HSize_t -> Out H5O_info_t -> CUInt -> HId_t -> IO HErr_t
 h5o_get_info_by_idx = h5o_get_info_by_idx3
 # else
@@ -571,7 +587,7 @@ h5o_get_info_by_name = h5o_get_info_by_name1
 h5o_get_info_by_name :: HId_t -> CString -> Out H5O_info_t -> CUInt -> HId_t -> IO HErr_t
 h5o_get_info_by_name = h5o_get_info_by_name2
 # elif H5Oget_info_by_name_vers == 3
-#  ccall   H5Oget_info_by_name3, <hid_t> -> CString -> Out <H5O_info2_t> -> CUInt -> <hid_t> -> IO <herr_t>
+#  ccall   H5Oget_info_by_name3, <hid_t> -> CString -> Out <HS_H5O_INFO2_T> -> CUInt -> <hid_t> -> IO <herr_t>
 h5o_get_info_by_name :: HId_t -> CString -> Out H5O_info_t -> CUInt -> HId_t -> IO HErr_t
 h5o_get_info_by_name = h5o_get_info_by_name3
 # else
